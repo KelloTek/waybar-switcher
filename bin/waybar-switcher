@@ -1,0 +1,120 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+# Script name : waybar-switcher
+# Description: Switch between Waybar configuration using a symlink
+# Dependencies: fzf, curl, pkill, waybar, uwsm-app (optional)
+
+REPO="https://github.com/KelloTek/waybar-switcher/releases/latest/download/waybar-switcher"
+INSTALL_PATH="/usr/local/bin/waybar-switcher"
+CONFIG_DIR="$HOME/.config/waybar-configs" # Directory containing all Waybar configs
+WAYBAR_LINK="$HOME/.config/waybar" # Symlink used by Waybar
+
+# Verify dependencies
+for cmd in fzf curl pkill; do
+  command -v "$cmd" &>/dev/null || { echo "Dependency mot found: $cmd"; exit 1; }
+done
+
+help() {
+  cat <<'EOF'
+waybar-switcher — switch and manage Waybar configurations
+
+Usage:
+  waybar-switcher [command]
+
+Commands:
+  (none)    Open fzf picker to select and switch to a Waybar config
+  update    Pull and install the latest release from GitHub
+  help      Show this help message
+
+Examples:
+  waybar-theme             # open config picker
+  waybar-theme update      # update to latest release
+
+Paths:
+  ~/.config/waybar-configs/       configs directory (one subdir per theme)
+  ~/.config/waybar         symlink managed by this tool
+
+Dependencies:
+  fzf, curl, pkill, waybar, uwsm-app (optional)
+
+Notes:
+  - Each config must be a subdirectory inside ~/.config/waybar-configs/
+  - Do not store files directly in ~/.config/waybar — it is a symlink
+  - Waybar is automatically restarted after switching
+EOF
+}
+
+update() {
+  # Download the binary to a temp file, then install it with sudo
+  local TMP_FILE
+  TMP_FILE="$(mktemp)"
+
+  echo "Updating from GitHub latest release..."
+
+  curl -fL "$REPO" -o "$TMP_FILE"
+  chmod +x "$TMP_FILE"
+
+  sudo install -Dm755 "$TMP_FILE" "$INSTALL_PATH"
+
+  rm -f "$TMP_FILE"
+
+  echo "Update completed"
+}
+
+switch_config() {
+  # If config dir is missing, bootstrap it from the current waybar config
+  if [[ ! -d "$CONFIG_DIR" ]]; then
+    mkdir -p $CONFIG_DIR
+    cp -rL "$WAYBAR_LINK" "$CONFIG_DIR/Default"
+  fi
+
+  # Display all available configurations through fzf
+  selected_config=$(
+    find "$CONFIG_DIR" \
+      -mindepth 1 \
+      -maxdepth 1 \
+      -type d \
+      -printf "%f\n" |
+    sort |
+    fzf \
+      --prompt="Select Waybar configuration > " \
+      --height=40% \
+      --border \
+      --reverse
+  )
+
+  # Exit if no configuration was selected
+  [[ -z "$selected_config" ]] && exit 0
+
+  # Remove the current symlink if it exists
+  rm -rf "$WAYBAR_LINK"
+
+  # Create a new symlink pointing to the selected config
+  ln -s "$CONFIG_DIR/$selected_config" "$WAYBAR_LINK"
+
+  # Reload Waybar
+  pkill -9 -x waybar
+
+  # Prefer uwsm-app if available (required for some compositors like Hyprland + UWSM)
+  if command -v uwsm-app &>/dev/null; then
+    setsid uwsm-app -- waybar >/dev/null 2>&1 &
+  else
+    setsid waybar >/dev/null 2>&1 &
+  fi
+
+  echo "Waybar configuration switched to: $selected_config"
+}
+
+case "${1:-}" in
+  help|--help|-h)
+    help
+    ;;
+  update)
+    update
+    ;;
+  *)
+    switch_config
+    ;;
+esac
