@@ -8,7 +8,7 @@ A simple CLI tool to switch between multiple Waybar configurations using fzf.
 - `curl`
 - `pkill`
 - `waybar`
-- `uwsm-app` (Optional, required for some compositors like Hyprland + UWSM)
+- `uwsm-app` _(Optional, required for some compositors like Hyprland + UWSM)_
 
 ## ⚙️ How it works
 
@@ -27,6 +27,9 @@ curl -fsSL https://raw.githubusercontent.com/KelloTek/waybar-switcher/refs/heads
 ```bash
 curl -fsSL https://raw.githubusercontent.com/KelloTek/waybar-switcher/refs/heads/main/uninstall.sh | bash
 ```
+
+Restores the currently active config as a real directory and removes the binary.
+Your other configs in `~/.config/waybar-configs/` are left untouched.
 
 ## 📁 Setup
 
