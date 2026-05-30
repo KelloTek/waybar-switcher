@@ -23,7 +23,7 @@ if [[ ! -f "$INSTALL_PATH" ]]; then
 fi
 
 # Confirm
-read -rp "Remove waybar-switcher from $INSTALL_PATH? [y/N] " confirm
+read -rp "Remove waybar-switcher from $INSTALL_PATH? [y/N] " confirm </dev/tty
 [[ "$confirm" =~ ^[yY]$ ]] || { echo -e "${RED}Aborted.${RESET}"; exit 0; }
 
 # Remove binary
@@ -32,7 +32,7 @@ echo -e "${GREEN}${BOLD}[SUCCESS]${RESET} waybar-switcher removed"
 
 # Optionally remove configs
 echo ""
-read -rp "Also remove ~/.config/waybar-configs/ and ~/.config/waybar symlink? [y/N] " confirm_configs
+read -rp "Also remove ~/.config/waybar-configs/ and ~/.config/waybar symlink? [y/N] " confirm_configs </dev/tty
 if [[ "$confirm_configs" =~ ^[yY]$ ]]; then
   [[ -L "$HOME/.config/waybar" ]] && rm "$HOME/.config/waybar" && echo -e "${GREEN}${BOLD}[SUCCESS]${RESET} Symlink removed"
   [[ -d "$HOME/.config/waybar-configs" ]] && rm -rf "$HOME/.config/waybar-configs" && echo -e "${GREEN}${BOLD}[SUCCESS]${RESET} Config directory removed"
