@@ -102,13 +102,17 @@ switch_config() {
   ln -s "$CONFIG_DIR/$selected_config" "$WAYBAR_LINK"
 
   # Reload Waybar
-  pkill -9 -x waybar
-
-  # Prefer uwsm-app if available (required for some compositors like Hyprland + UWSM)
-  if command -v uwsm-app &>/dev/null; then
-    nohup setsid uwsm-app -- waybar >/dev/null 2>&1 & disown
+  if command -v omarchy-restart-waybar &>/dev/null; then
+    omarchy-restart-waybar
   else
-    setsid waybar >/dev/null 2>&1 &
+    pkill -9 -x waybar
+
+    # Prefer uwsm-app if available (required for some compositors like Hyprland + UWSM)
+    if command -v uwsm-app &>/dev/null; then
+      nohup setsid uwsm-app -- waybar >/dev/null 2>&1 & disown
+    else
+      setsid waybar >/dev/null 2>&1 &
+    fi
   fi
 
   echo -e "${GREEN}${BOLD}[SUCCESS]${RESET} Waybar configuration switched to: $selected_config"
