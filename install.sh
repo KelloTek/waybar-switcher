@@ -5,17 +5,17 @@ set -euo pipefail
 # Script name : install.sh
 # Description : Install waybar-switcher from GitHub releases
 
+REPO="KelloTek/waybar-switcher"
+BINARY="waybar-switcher"
+INSTALL_PATH="/usr/local/bin/$BINARY"
+TMP_FILE="$(mktemp)"
+
 # Colors
 RED='\033[0;31m'
 GREEN='\033[0;32m'
 BLUE='\033[0;34m'
 BOLD='\033[1m'
 RESET='\033[0m'
-
-REPO="KelloTek/waybar-switcher"
-BINARY="waybar-switcher"
-INSTALL_PATH="/usr/local/bin/$BINARY"
-TMP_FILE="$(mktemp)"
 
 cleanup() {
   rm -f "$TMP_FILE"
