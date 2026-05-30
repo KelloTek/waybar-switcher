@@ -22,11 +22,6 @@ A simple CLI tool to switch between multiple Waybar configurations using fzf.
 ```bash
 curl -fsSL https://raw.githubusercontent.com/KelloTek/waybar-switcher/refs/heads/main/install.sh | bash
 ```
-## 🗑️ Uninstall
-
-```bash
-curl -fsSL https://raw.githubusercontent.com/KelloTek/waybar-switcher/refs/heads/main/uninstall.sh | bash
-```
 
 Restores the currently active config as a real directory and removes the binary.
 Your other configs in `~/.config/waybar-configs/` are left untouched.
@@ -55,6 +50,12 @@ Place each Waybar config as subdirectory inside `~/.config/waybar-configs/`:
 | `waybar-switcher`        | Open interactive config picker          |
 | `waybar-switcher update` | Update to the latest release           |
 | `waybar-switcher help`   | Show help                              |
+
+## 🗑️ Uninstall
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/KelloTek/waybar-switcher/refs/heads/main/uninstall.sh | bash
+```
 
 ## 🖥️ Compatibility
 
