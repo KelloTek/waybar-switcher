@@ -106,7 +106,7 @@ switch_config() {
 
   # Prefer uwsm-app if available (required for some compositors like Hyprland + UWSM)
   if command -v uwsm-app &>/dev/null; then
-    setsid uwsm-app -- waybar >/dev/null 2>&1 &
+    nohup setsid uwsm-app -- waybar >/dev/null 2>&1 & disown
   else
     setsid waybar >/dev/null 2>&1 &
   fi
