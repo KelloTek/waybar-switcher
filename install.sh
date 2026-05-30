@@ -5,6 +5,13 @@ set -euo pipefail
 # Script name : install.sh
 # Description : Install waybar-switcher from GitHub releases
 
+# Colors
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+BLUE='\033[0;34m'
+BOLD='\033[1m'
+RESET='\033[0m'
+
 REPO="KelloTek/waybar-switcher"
 BINARY="waybar-switcher"
 INSTALL_PATH="/usr/local/bin/$BINARY"
@@ -23,11 +30,11 @@ fi
 
 # Verify dependencies
 for cmd in curl sudo; do
-  command -v "$cmd" &>/dev/null || { echo "Dependency not found: $cmd"; exit 1; }
+  command -v "$cmd" &>/dev/null || { echo -e "${RED}${BOLD}[ERROR]${RESET} Dependency not found: $cmd"; exit 1; }
 done
 
 # Fetch latest release tag from GitHub API
-echo "Fetching latest release..."
+echo -e "${BLUE}${BOLD}[INFO]${RESET} Fetching latest release..."
 LATEST_TAG=$(
   curl -fsSL "https://api.github.com/repos/$REPO/releases/latest" |
   grep '"tag_name"' |
@@ -35,18 +42,18 @@ LATEST_TAG=$(
 )
 
 if [[ -z "$LATEST_TAG" ]]; then
-  echo "Error: could not fetch latest release tag"
+  echo -e "${RED}${BOLD}[ERROR]${RESET} Could not fetch latest release tag"
   exit 1
 fi
 
 DOWNLOAD_URL="https://github.com/$REPO/releases/download/$LATEST_TAG/$BINARY"
 
-echo "Installing $BINARY $LATEST_TAG..."
+echo -e "${BLUE}${BOLD}[INFO]${RESET} Installing $BINARY $LATEST_TAG..."
 curl -fL "$DOWNLOAD_URL" -o "$TMP_FILE"
 chmod +x "$TMP_FILE"
 sudo install -Dm755 "$TMP_FILE" "$INSTALL_PATH"
 
 echo ""
-echo "✓ waybar-switcher $LATEST_TAG installed to $INSTALL_PATH"
+echo -e "${GREEN}${BOLD}[SUCCESS]${RESET} waybar-switcher $LATEST_TAG installed to $INSTALL_PATH"
 echo ""
-echo "Getting started: run waybar-switcher"
+echo -e "${BLUE}${BOLD}[INFO]${RESET} Getting started: run waybar-switcher"

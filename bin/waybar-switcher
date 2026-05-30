@@ -6,6 +6,13 @@ set -euo pipefail
 # Description: Switch between Waybar configuration using a symlink
 # Dependencies: fzf, curl, pkill, waybar, uwsm-app (optional)
 
+# Colors
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+BLUE='\033[0;34m'
+BOLD='\033[1m'
+RESET='\033[0m'
+
 REPO="https://github.com/KelloTek/waybar-switcher/releases/latest/download/waybar-switcher"
 INSTALL_PATH="/usr/local/bin/waybar-switcher"
 CONFIG_DIR="$HOME/.config/waybar-configs" # Directory containing all Waybar configs
@@ -13,7 +20,7 @@ WAYBAR_LINK="$HOME/.config/waybar" # Symlink used by Waybar
 
 # Verify dependencies
 for cmd in fzf curl pkill; do
-  command -v "$cmd" &>/dev/null || { echo "Dependency mot found: $cmd"; exit 1; }
+  command -v "$cmd" &>/dev/null || { echo -e "${RED}${BOLD}[ERROR]${RESET} Dependency not found: $cmd"; exit 1; }
 done
 
 help() {
@@ -29,12 +36,12 @@ Commands:
   help      Show this help message
 
 Examples:
-  waybar-theme             # open config picker
-  waybar-theme update      # update to latest release
+  waybar-switcher             # open config picker
+  waybar-switcher update      # update to latest release
 
 Paths:
   ~/.config/waybar-configs/       configs directory (one subdir per theme)
-  ~/.config/waybar         symlink managed by this tool
+  ~/.config/waybar                symlink managed by this tool
 
 Dependencies:
   fzf, curl, pkill, waybar, uwsm-app (optional)
@@ -51,7 +58,7 @@ update() {
   local TMP_FILE
   TMP_FILE="$(mktemp)"
 
-  echo "Updating from GitHub latest release..."
+  echo -e "${BLUE}${BOLD}[INFO]${RESET} Updating from GitHub latest release..."
 
   curl -fL "$REPO" -o "$TMP_FILE"
   chmod +x "$TMP_FILE"
@@ -60,7 +67,7 @@ update() {
 
   rm -f "$TMP_FILE"
 
-  echo "Update completed"
+  echo -e "${GREEN}${BOLD}[SUCCESS]${RESET} Update completed"
 }
 
 switch_config() {
@@ -104,7 +111,7 @@ switch_config() {
     setsid waybar >/dev/null 2>&1 &
   fi
 
-  echo "Waybar configuration switched to: $selected_config"
+  echo -e "${GREEN}${BOLD}[SUCCESS]${RESET} Waybar configuration switched to: $selected_config"
 }
 
 case "${1:-}" in

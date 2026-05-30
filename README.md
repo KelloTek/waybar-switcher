@@ -20,7 +20,12 @@ A simple CLI tool to switch between multiple Waybar configurations using fzf.
 ## 🚀 Installation
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/KelloTek/waybar-switcher/main/install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/KelloTek/waybar-switcher/refs/heads/main/install.sh | bash
+```
+## 🗑️ Uninstall
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/KelloTek/waybar-switcher/refs/heads/main/uninstall.sh | bash
 ```
 
 ## 📁 Setup
@@ -30,13 +35,13 @@ Place each Waybar config as subdirectory inside `~/.config/waybar-configs/`:
 ```
 ~/.config/waybars/
 ├── Default/
-│   ├── config
+│   ├── config.jsonc
 │   └── style.css
 ├── Minimal/
-│   ├── config
+│   ├── config.jsonc
 │   └── style.css
 └── Tokyo-Night/
-│   ├── config
+│   ├── config.jsonc
 │   └── style.css
 ```
 
@@ -51,4 +56,3 @@ Place each Waybar config as subdirectory inside `~/.config/waybar-configs/`:
 ## 🖥️ Compatibility
 
 Tested on [omarchy](https://omarchy.org) (Arch Linux).
-Other Arch-based distros should work. Feedback welcome for other distributions.
