@@ -24,7 +24,7 @@ trap cleanup EXIT
 
 # Detect OS
 if [[ "$(uname -s)" != "Linux" ]]; then
-  echo "Error: waybar-switcher is Linux only"
+  echo "${RED}${BOLD}[ERROR]${RESET} waybar-switcher is Linux only"
   exit 1
 fi
 

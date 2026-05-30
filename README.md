@@ -45,8 +45,12 @@ Place each Waybar config as subdirectory inside `~/.config/waybar-configs/`:
 | Command                  | Description                            |
 |--------------------------|----------------------------------------|
 | `waybar-switcher`        | Open interactive config picker          |
-| `waybar-switcher update` | Update to the latest release           |
 | `waybar-switcher help`   | Show help                              |
+
+If you want to use TUI on Omarchy use this command line:
+```bash
+nohup waybar-switcher
+```
 
 ## 🗑️ Uninstall
 
@@ -59,4 +63,4 @@ Your other configs in `~/.config/waybar-configs/` are left untouched.
 
 ## 🖥️ Compatibility
 
-Tested on [omarchy](https://omarchy.org) (Arch Linux).
+Tested on [Omarchy](https://omarchy.org) (Arch Linux).

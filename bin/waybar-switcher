@@ -6,15 +6,12 @@ set -euo pipefail
 # Description: Switch between Waybar configuration using a symlink
 # Dependencies: fzf, curl, pkill, waybar, uwsm-app (optional)
 
-REPO="https://github.com/KelloTek/waybar-switcher/releases/latest/download/waybar-switcher"
-INSTALL_PATH="/usr/local/bin/waybar-switcher"
 CONFIG_DIR="$HOME/.config/waybar-configs" # Directory containing all Waybar configs
 WAYBAR_LINK="$HOME/.config/waybar" # Symlink used by Waybar
 
 # Colors
 RED='\033[0;31m'
 GREEN='\033[0;32m'
-BLUE='\033[0;34m'
 BOLD='\033[1m'
 RESET='\033[0m'
 
@@ -37,7 +34,6 @@ Commands:
 
 Examples:
   waybar-switcher             # open config picker
-  waybar-switcher update      # update to latest release
 
 Paths:
   ~/.config/waybar-configs/       configs directory (one subdir per theme)
@@ -51,23 +47,6 @@ Notes:
   - Do not store files directly in ~/.config/waybar — it is a symlink
   - Waybar is automatically restarted after switching
 EOF
-}
-
-update() {
-  # Download the binary to a temp file, then install it with sudo
-  local TMP_FILE
-  TMP_FILE="$(mktemp)"
-
-  echo -e "${BLUE}${BOLD}[INFO]${RESET} Updating from GitHub latest release..."
-
-  curl -fL "$REPO" -o "$TMP_FILE"
-  chmod +x "$TMP_FILE"
-
-  sudo install -Dm755 "$TMP_FILE" "$INSTALL_PATH"
-
-  rm -f "$TMP_FILE"
-
-  echo -e "${GREEN}${BOLD}[SUCCESS]${RESET} Update completed"
 }
 
 switch_config() {
@@ -102,17 +81,13 @@ switch_config() {
   ln -s "$CONFIG_DIR/$selected_config" "$WAYBAR_LINK"
 
   # Reload Waybar
-  if command -v omarchy-restart-waybar &>/dev/null; then
-    omarchy-restart-waybar
-  else
-    pkill -9 -x waybar
+  pkill -9 -x waybar
 
-    # Prefer uwsm-app if available (required for some compositors like Hyprland + UWSM)
-    if command -v uwsm-app &>/dev/null; then
-      nohup setsid uwsm-app -- waybar >/dev/null 2>&1 & disown
-    else
-      setsid waybar >/dev/null 2>&1 &
-    fi
+  # Prefer uwsm-app if available (required for some compositors like Hyprland + UWSM)
+  if command -v uwsm-app &>/dev/null; then
+    setsid uwsm-app -- waybar >/dev/null 2>&1 &
+  else
+    setsid waybar >/dev/null 2>&1 &
   fi
 
   echo -e "${GREEN}${BOLD}[SUCCESS]${RESET} Waybar configuration switched to: $selected_config"
@@ -121,9 +96,6 @@ switch_config() {
 case "${1:-}" in
   help|--help|-h)
     help
-    ;;
-  update)
-    update
     ;;
   *)
     switch_config
