@@ -49,7 +49,7 @@ Place each Waybar config as subdirectory inside `~/.config/waybar-configs/`:
 
 If you want to use TUI on Omarchy use this command line:
 ```bash
-nohup waybar-switcher
+bash -c 'waybar-switcher; sleep 1; exit; exec bash'
 ```
 
 ## 🗑️ Uninstall
