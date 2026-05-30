@@ -55,5 +55,4 @@ sudo install -Dm755 "$TMP_FILE" "$INSTALL_PATH"
 
 echo ""
 echo -e "${GREEN}${BOLD}[SUCCESS]${RESET} waybar-switcher $LATEST_TAG installed to $INSTALL_PATH"
-echo ""
 echo -e "${BLUE}${BOLD}[INFO]${RESET} Getting started: run waybar-switcher"
